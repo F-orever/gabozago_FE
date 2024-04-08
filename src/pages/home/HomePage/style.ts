@@ -2,12 +2,15 @@ import styled from "styled-components";
 
 export const Header = styled.header`
   padding: 40px 20px 0;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: ${({ theme }) => theme.white};
-  z-index: 30;
+  z-index: 20;
 
   &::before {
     position: absolute;
@@ -41,4 +44,10 @@ export const SearchButton = styled.button`
       fill: ${({ theme }) => theme.gray};
     }
   }
+`;
+
+export const ContentBox = styled.div`
+  height: 100%;
+  margin-top: 44px;
+  padding-top: 4px;
 `;

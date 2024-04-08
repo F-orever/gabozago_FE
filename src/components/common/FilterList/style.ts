@@ -2,9 +2,7 @@ import styled from "styled-components";
 import { FilterButton } from "../FilterButton/style";
 
 export const FilterList = styled.ol`
-  padding-bottom: 5px;
   display: flex;
-  flex-wrap: nowrap;
   gap: 10px;
   width: 100%;
   overflow-x: auto;
@@ -18,11 +16,7 @@ export const FilterItem = styled.li`
 
 export const AllFilterButton = styled(FilterButton)`
   background-color: ${({ theme }) => theme.gray06};
-  box-shadow: 0 0 0 0px;
-
-  svg path {
-    fill: ${({ theme }) => theme.gray01};
-  }
+  box-shadow: 0 0 0 0px ${({ theme }) => theme.gray02} inset;
 
   &:hover,
   &:active {
@@ -35,9 +29,8 @@ export const AllFilterButton = styled(FilterButton)`
 `;
 
 export const ActiveFilterList = styled(FilterList)`
-  margin: 5px 0;
+  margin-top: 14px;
   flex-wrap: wrap;
-  gap: 5px 5px;
 `;
 
 export const ActiveFilterChip = styled.button`
