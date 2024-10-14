@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ModalWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
@@ -6,7 +6,7 @@ export const ModalWrapper = styled.div<{ isOpen: boolean }>`
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: ${({ isOpen }) => (isOpen ? 40 : -10)};
+  z-index: ${({ isOpen }) => (isOpen ? 540 : -10)};
 
   margin: auto;
   max-width: 500px;
@@ -37,8 +37,7 @@ export const GroupItem = styled.li<{ background?: string | undefined }>`
 
     border-radius: 10px;
     background-color: ${({ theme }) => theme.gray05};
-    background-image: ${({ background }) =>
-      background ? `url(${background})` : "none"};
+    background-image: ${({ background }) => (background ? `url(${background})` : 'none')};
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -78,4 +77,40 @@ export const MenuButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.gray04};
   }
+`;
+
+export const PopupHeader = styled.div`
+  margin-bottom: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const PopupTitle = styled.p`
+  font-size: 12px;
+  line-height: 22px;
+  font-weight: 500;
+`;
+
+export const PopupSaveButton = styled.button`
+  padding: 5px;
+  border-radius: 5px;
+  border: 0;
+  font-size: 12px;
+  background-color: transparent;
+  color: ${({ theme }) => theme.main};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.gray05};
+  }
+`;
+
+export const PopupInput = styled.input`
+  width: 100%;
+  padding: 5px 3px;
+  border: 0;
+  border-bottom: 2px solid ${({ theme }) => theme.gray04};
+
+  font-size: 16px;
 `;

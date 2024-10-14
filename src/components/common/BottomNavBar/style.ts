@@ -1,64 +1,52 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Nav = styled.nav<{ backgroundColor: string }>`
+export const NavList = styled.ol`
   width: 100%;
   max-width: 500px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  z-index: 20;
+  background-color: white;
 
-  position: fixed;
-  bottom:0;
-`;
+  padding-top: 8px;
+  padding-bottom: 15px;
 
-export const NavList = styled.ul`
-  margin: auto;
-  margin-bottom: 10px;
-  width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-`;
+  grid-template-columns: repeat(5, 1fr);
 
-export const ListItem = styled.li<{ active?: boolean; activeColor: string }>`
   a {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
 
     text-decoration: none;
-    color: ${({ active, activeColor, theme }) =>
-      active
-        ? activeColor === "white"
-          ? theme.white
-          : theme.main
-        : theme.gray02};
+    color: ${({ isActive, theme }) => (isActive ? theme.main : theme.gray02)};
     transition: all ease-in-out 0.3s;
+  }
+`;
 
-    span {
-      font-size: 10px;
-      font-weight: 600;
-      line-height: 12px;
-      margin-top: 2px;
-    }
+export const ListItem = styled.li<{ isActive?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  label {
+    font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+
     path {
       transition: all ease-in-out 0.3s;
-      fill: ${({ active, activeColor, theme }) =>
-        active
-          ? activeColor === "white"
-            ? theme.white
-            : theme.main
-          : theme.gray02};
+      fill: ${({ isActive, theme }) => (isActive ? theme.main : theme.gray02)};
     }
+  }
 
-    @media (hover: hover){
-      &:hover {
-        color: ${({ theme }) => theme.main};
-        path {
-          fill: ${({ theme }) => theme.main};
-        }
+  @media (hover: hover) {
+    &:hover {
+      color: ${({ theme }) => theme.main};
+      path {
+        fill: ${({ theme }) => theme.main};
       }
     }
-    
   }
 `;

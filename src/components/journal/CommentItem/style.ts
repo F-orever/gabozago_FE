@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const GrayColoredIcon = styled.span`
   svg path {
@@ -6,11 +6,21 @@ export const GrayColoredIcon = styled.span`
   }
 `;
 
+export const BlockedIconWrapper = styled.div`
+  svg {
+    path:first-child {
+      fill: #b0b0b0;
+    }
+    path:last-child {
+      fill: #5276fa;
+    }
+  }
+`;
+
 export const Container = styled.div<{ isReply: boolean; isFocused: boolean }>`
   width: 100%;
-  padding: ${({ isReply }) => (isReply ? "0" : "8px 15px")};
-  background-color: ${({ isFocused, theme }) =>
-    isFocused ? theme.blue05 : "transparent"};
+  padding: ${({ isReply }) => (isReply ? '0' : '8px 15px')};
+  background-color: ${({ isFocused, theme }) => (isFocused ? theme.blue05 : 'transparent')};
   a {
     text-decoration: none;
     color: inherit;
@@ -30,6 +40,11 @@ export const UserProfileImgBox = styled.div`
   width: 34px;
   height: 34px;
   overflow: hidden;
+
+  svg {
+    width: 34px;
+    height: 34px;
+  }
 `;
 
 export const UserProfileImg = styled.img`
@@ -131,7 +146,7 @@ export const ReplyToggleButton = styled.button`
 
   &::before {
     display: inline-block;
-    content: "";
+    content: '';
     width: 20px;
     height: 1px;
     background-color: ${({ theme }) => theme.gray02};
@@ -143,4 +158,13 @@ export const ReplyList = styled.ol`
   display: flex;
   flex-direction: column;
   gap: 15px;
+`;
+
+export const BlockedContent = styled.span`
+  color: ${({ theme }) => theme.colors.gray.secondary};
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
 `;

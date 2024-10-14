@@ -1,13 +1,9 @@
-import * as S from "./style";
-import { SetterOrUpdater } from "recoil";
-import { useState } from "react";
-import Button from "../../Button";
-import {
-  TFilter,
-  TFilterName,
-  TFilterAndOptions,
-} from "../../../../assets/types/FilterTypes";
-import { filterMap } from "../../../../recoil/filters/codeMap";
+import { SetterOrUpdater } from 'recoil';
+import { useState } from 'react';
+import * as S from './style';
+import Button from '../../Button';
+import { TFilter, TFilterName, TFilterAndOptions } from '../../../../assets/types/FilterTypes';
+import { filterMap } from '../../../../recoil/filters/codeMap';
 
 interface Props {
   type: TFilterName;
@@ -21,13 +17,7 @@ interface Props {
   }>;
 }
 
-function FilterModalContent({
-  type,
-  filters,
-  filterState,
-  setFilterState,
-  setModal,
-}: Props) {
+function FilterModalContent({ type, filters, filterState, setFilterState, setModal }: Props) {
   const [tempFilter, setTempFilter] = useState(filterState[type]);
 
   const renderComponent = (filter: TFilterAndOptions) => {
@@ -37,6 +27,7 @@ function FilterModalContent({
         filter={tempFilter}
         setFilter={setTempFilter}
         options={filter.options?.options}
+        defaultSelected={filter.options?.defaultSelected}
       />
     );
   };
@@ -48,7 +39,7 @@ function FilterModalContent({
         <Button
           type="normal"
           size="lg"
-          active={true}
+          active
           width="100%"
           onClick={(e) => {
             e.preventDefault();

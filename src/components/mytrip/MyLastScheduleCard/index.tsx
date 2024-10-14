@@ -1,12 +1,12 @@
-import LocationIcon from "../../../assets/icons/location.svg?react";
-import KebabMenuIcon from "../../../assets/icons/menu_kebab.svg?react";
-import LogoSmallIcon from "../../../assets/icons/logo_small_blue04_text.svg?react";
-import CalendarIcon from "../../../assets/icons/calendar.svg?react";
+import { useNavigate } from 'react-router-dom';
+import LocationIcon from '../../../assets/icons/location.svg?react';
+import KebabMenuIcon from '../../../assets/icons/menu_kebab.svg?react';
+import LogoSmallIcon from '../../../assets/icons/logo_small_blue04_text.svg?react';
+import CalendarIcon from '../../../assets/icons/calendar.svg?react';
 
-import Typography from "../../common/Typography";
-import * as S from "./style";
-import { useNavigate } from "react-router-dom";
-import useMyTripModal from "../../../hooks/useMyTripModal";
+import Typography from '../../common/Typography';
+import * as S from './style';
+import useMyTripModal from '../../../hooks/useMyTripModal';
 
 interface Props {
   id: number;
@@ -15,6 +15,7 @@ interface Props {
   arrival_date: string;
   regions: string[];
   thumbnailURL: string;
+  isUpcoming: boolean;
 }
 
 function MyLastScheduleCard({
@@ -24,11 +25,12 @@ function MyLastScheduleCard({
   arrival_date,
   regions,
   thumbnailURL,
+  isUpcoming,
 }: Props) {
   const navigate = useNavigate();
-  const { MyTripModal, modalOpen, modalClose, isModalOpend } = useMyTripModal({
-    id: id,
-    title: title,
+  const { MyTripModal, modalOpen } = useMyTripModal({
+    id,
+    title,
     departureDate: departure_date,
     arrivalDate: arrival_date,
   });
@@ -36,22 +38,18 @@ function MyLastScheduleCard({
   return (
     <>
       <MyTripModal />
-      <S.Card>
+      <S.Card isUpcoming={isUpcoming}>
         <S.InfoContainer>
-          <S.ThumbnailWrapper>
-            {thumbnailURL ? (
-              <img src={thumbnailURL} alt="thumbnail" />
-            ) : (
-              <LogoSmallIcon />
-            )}
+          <S.ThumbnailWrapper isUpcoming={isUpcoming}>
+            {thumbnailURL ? <img src={thumbnailURL} alt="thumbnail" /> : <LogoSmallIcon />}
           </S.ThumbnailWrapper>
           <S.TextContainer
             onClick={() => {
               navigate(`/mytrip/${id}`);
             }}
           >
-            <Typography.Title size="md" noOfLine={2} maxWidth={300}>
-              {title}
+            <Typography.Title size="md" noOfLine={2} maxWidth={150}>
+              <span style={{ wordBreak: 'break-all' }}>{title}</span>
             </Typography.Title>
             <S.Infos>
               <S.Info>
@@ -63,7 +61,7 @@ function MyLastScheduleCard({
               <S.Info>
                 <LocationIcon />
                 <Typography.Label size="md" color="#424242">
-                  {regions.join(", ")}
+                  {regions.join(', ')}
                 </Typography.Label>
               </S.Info>
             </S.Infos>

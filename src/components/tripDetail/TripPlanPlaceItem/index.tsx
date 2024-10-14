@@ -1,24 +1,22 @@
-import * as S from "./style";
-import { useLongPress } from "use-long-press";
-import ThemeIcon from "../../../assets/icons/theme.svg?react";
-import LocationIcon from "../../../assets/icons/location.svg?react";
-import EditIcon from "../../../assets/icons/edit.svg?react";
-import Typography from "../../common/Typography";
-import { createSearchParams, useNavigate } from "react-router-dom";
-import { DateObject } from "../../../utils/parseDateString";
+import { useLongPress } from 'use-long-press';
+import { createSearchParams, useNavigate } from 'react-router-dom';
+import * as S from './style';
+import ThemeIcon from '../../../assets/icons/theme.svg?react';
+import LocationIcon from '../../../assets/icons/location.svg?react';
+import EditIcon from '../../../assets/icons/edit.svg?react';
+import Typography from '../../common/Typography';
+import { DateObject } from '@_utils/calendar';
 
 export interface PlaceData {
   detailRouteId: number;
   placeName: string;
-  placeTheme: string;
+  placeCategory: string;
   placeId: number;
-  location: string;
-  address: string;
-  googlePlaceId: string;
-  placeImage: string;
+  placeLocation: string;
   latitude: number;
   longitude: number;
   memo: string;
+  thumbnailURL: string;
 }
 
 interface Props extends PlaceData {
@@ -31,13 +29,12 @@ interface Props extends PlaceData {
 function TripPlanPlaceItem({
   detailRouteId,
   placeName,
-  placeTheme,
+  placeCategory,
   placeId,
   memo,
   day,
   date,
-  location,
-  index,
+  placeLocation,
   setIsEditMode,
 }: Props) {
   const navigate = useNavigate();
@@ -49,7 +46,7 @@ function TripPlanPlaceItem({
       threshold: 600, // ms
       captureEvent: true, // 첫번째 인자로 들어온 callback 함수가 react MouseEvent를 도와주게 설정
       cancelOnMovement: false, // 꾹 눌렀다가 옆으로 이동했을때 취소
-    }
+    },
   );
 
   return (
@@ -64,29 +61,29 @@ function TripPlanPlaceItem({
             {placeName}
           </Typography.Title>
           <S.InfoContainer>
-            <S.InfoSpan>
-              <LocationIcon />
-              {location}
-            </S.InfoSpan>
-            {placeTheme && (
+            {placeCategory && (
               <S.InfoSpan>
                 <ThemeIcon />
-                {placeTheme}
+                {placeCategory}
               </S.InfoSpan>
             )}
+            <S.InfoSpan>
+              <LocationIcon />
+              {placeLocation}
+            </S.InfoSpan>
           </S.InfoContainer>
         </div>
         <S.MemoButton
           onClick={(e) => {
             e.stopPropagation();
             navigate({
-              pathname: `./memo`,
+              pathname: './memo',
               search: createSearchParams({
                 detailRouteId: String(detailRouteId),
                 day: String(day),
-                placeName: placeName,
+                placeName,
                 date: `${date.month}. ${date.day}(${date.dayOfWeek})`,
-                text: memo || "",
+                text: memo || '',
               }).toString(),
             });
           }}
@@ -95,7 +92,11 @@ function TripPlanPlaceItem({
           <EditIcon />
         </S.MemoButton>
       </S.TitleBox>
-      {memo && memo.length >= 0 && <S.MemoParagraph>{memo}</S.MemoParagraph>}
+      {memo && memo.length >= 0 && (
+        <Typography.Label size="md" color="#A6A6A6" noOfLine={2}>
+          {memo}
+        </Typography.Label>
+      )}
     </S.PlaceBox>
   );
 }

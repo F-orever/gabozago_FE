@@ -1,22 +1,22 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MenuList = styled.ul`
-  padding: 0 20px;
+  padding: 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-bottom: 10px;
+  gap: 20px;
 `;
 
 export const MenuItem = styled.li<{ color?: string }>`
-  padding: 5px 0;
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  grid-auto-rows: fit-content;
-  gap: 20px;
-
+  width: 100%;
   cursor: pointer;
   color: ${({ theme }) => theme.gray01};
+
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
 
   &:hover {
     text-decoration: underline;
@@ -28,7 +28,7 @@ export const MenuItem = styled.li<{ color?: string }>`
     line-height: 0;
 
     path {
-      fill: ${({ color, theme }) => (color ? color : theme.gray01)};
+      fill: ${({ color, theme }) => color || theme.gray01};
     }
   }
 `;

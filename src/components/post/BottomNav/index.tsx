@@ -1,21 +1,26 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { post } from "../../../utils/api";
-import usePopup from "../../../hooks/usePopup";
-import useAlert from "../../../hooks/useAlert";
-import Typography from "../../common/Typography";
-import useScrapModal from "../../video/useScrapModal";
+import { post } from '@_utils/api';
+import usePopup from '../../../hooks/usePopup';
+import useAlert from '../../../hooks/useAlert';
+import Typography from '../../common/Typography';
+import useScrapModal from '../../video/useScrapModal';
 
-import ClapIcon from "../../../assets/icons/clap.svg?react";
-import ClapMainIcon from "../../../assets/icons/clap_blue.svg?react";
-import CommentIcon from "../../../assets/icons/comment.svg?react";
-import BookMarkIcon from "../../../assets/icons/bookmark.svg?react";
-import ShareIcon from "../../../assets/icons/share.svg?react";
+import ClapIcon from '../../../assets/icons/clap.svg?react';
+import ClapMainIcon from '../../../assets/icons/clap_blue.svg?react';
+import CommentIcon from '../../../assets/icons/comment.svg?react';
+import BookMarkIcon from '../../../assets/icons/bookmark.svg?react';
+import ShareIcon from '../../../assets/icons/share.svg?react';
 
-import isLogin from "../../../utils/isLogin";
+import isLogin from '@_utils/isLogin';
 
-import * as S from "./style";
+import * as S from './style';
+import { useSetRecoilState } from 'recoil';
+import { popupValue } from '@_recoil/common/PopupValue';
+import toast from 'react-hot-toast';
+import { Toast } from '@_common/Toast';
+import styled from 'styled-components';
 
 interface Props {
   postId: number;
@@ -28,6 +33,21 @@ interface Props {
   onShareClick: () => void;
   title?: string;
 }
+
+const ToastLink = styled.span`
+  display: inline-block;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  text-decoration-line: underline;
+  cursor: pointer;
+`;
 
 function BottomNav({
   postId,
@@ -45,78 +65,43 @@ function BottomNav({
   const [isUserScraped, setIsUserScraped] = useState<boolean>(isBookmarked);
   const [isUserClap, setIsUserClap] = useState<boolean>(isClap);
   const [isUserClpas, setIsUserClpas] = useState<number>(claps);
-  const { Alert, alertOpen } = useAlert({
-    Content: (
-      <Typography.Body size="lg" color="white">
-        로그인이 필요한 서비스에요.
-      </Typography.Body>
-    ),
-    RightContent: (
-      <Typography.Body size="lg" color="white">
-        <span
-          style={{ textDecoration: "underline", cursor: "pointer" }}
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          로그인 하러가기
-        </span>
-      </Typography.Body>
-    ),
-  });
+  const setPopupUI = useSetRecoilState(popupValue);
 
-  const {ScrapModal, scrapModalOpen, scrapModalClose} = useScrapModal({
+  const { ScrapModal, scrapModalOpen, scrapModalClose } = useScrapModal({
     id: Number(postId),
-    type: "article",
-    setIsScraped: () => {setIsUserScraped(prev => !prev)},
+    type: 'article',
+    setIsScraped: () => {
+      setIsUserScraped((prev) => !prev);
+    },
   });
 
   function countScraps() {
-    if(isBookmarked) {
-      if(isUserScraped){
-        return bookmark;
-      } else {
-        return bookmark - 1;
-      }
-    } else {
-      if(isUserScraped){
-        return bookmark + 1;
-      } else {
+    if (isBookmarked) {
+      if (isUserScraped) {
         return bookmark;
       }
+      return bookmark - 1;
     }
+    if (isUserScraped) {
+      return bookmark + 1;
+    }
+    return bookmark;
   }
   return (
     <>
-      <Alert />
+      {/* <Alert /> */}
       <ScrapModal />
-      <Popup>
-        <S.UrlLabel htmlFor="urlCopy">
-          아래 링크를 복사해 공유해보세요!
-        </S.UrlLabel>
-        <S.UrlInput
-          type="url"
-          name="현재 링크 복사"
-          id="urlCopy"
-          value={window.location.href}
-          onClick={() => {
-            navigator.clipboard.writeText(`${title}\n${window.location.href}`);
-            popupClose();
-            onShareClick && onShareClick();
-          }}
-        />
-      </Popup>
       <S.Navigation>
         <S.NavigationItem
           onClick={() => {
             if (isLogin()) {
               post<{
-                message: "CREATE SUCCESS" | "DELETE SUCCESS";
-              }>(`/clap/community`, {
-                community: "article",
-                postId: postId,
+                message: 'CREATE SUCCESS' | 'DELETE SUCCESS';
+              }>('/clap/community', {
+                community: 'article',
+                postId,
               }).then((response) => {
-                if (response.data.message == "CREATE SUCCESS") {
+                if (response.data.message == 'CREATE SUCCESS') {
                   setIsUserClap(true);
                   setIsUserClpas((prev) => prev + 1);
                 } else {
@@ -124,8 +109,6 @@ function BottomNav({
                   setIsUserClpas((prev) => prev - 1);
                 }
               });
-            }else {
-              alertOpen();
             }
           }}
         >
@@ -136,8 +119,6 @@ function BottomNav({
           onClick={() => {
             if (isLogin()) {
               onCommentClick();
-            }else {
-              alertOpen();
             }
           }}
         >
@@ -147,21 +128,16 @@ function BottomNav({
         <S.NavigationItem
           isBookmarked={isUserScraped}
           onClick={() => {
-            if(!isUserScraped && localStorage.getItem("access_token")) {
-              post<{ message: "Create Success" | "Delete Success" }>(
-                `/folder/scrap/community`,
-                {
-                  community: "article",
-                  postId: postId,
-                }
-              ).then(() => {
+            if (!isUserScraped && localStorage.getItem('access_token')) {
+              post<{ message: 'Create Success' | 'Delete Success' }>('/folder/scrap/community', {
+                community: 'article',
+                postId,
+              }).then(() => {
                 setIsUserScraped(true);
               });
             }
-            if(isLogin()){
+            if (isLogin()) {
               scrapModalOpen();
-            } else {
-              alertOpen();
             }
           }}
         >
@@ -170,6 +146,24 @@ function BottomNav({
         </S.NavigationItem>
         <S.NavigationItem
           onClick={() => {
+            setPopupUI({
+              Custom: (
+                <>
+                  <S.UrlLabel htmlFor="urlCopy">아래 링크를 복사해 공유해보세요!</S.UrlLabel>
+                  <S.UrlInput
+                    type="url"
+                    name="현재 링크 복사"
+                    id="urlCopy"
+                    value={window.location.href}
+                    onClick={() => {
+                      navigator.clipboard.writeText(`${title}\n${window.location.href}`);
+                      popupClose();
+                      if (onShareClick) onShareClick();
+                    }}
+                  />
+                </>
+              ),
+            });
             popupOpen();
           }}
         >

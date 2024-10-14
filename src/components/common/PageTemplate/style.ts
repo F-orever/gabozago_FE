@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div<{ header: boolean }>`
   margin: auto;
@@ -9,12 +9,12 @@ export const Container = styled.div<{ header: boolean }>`
   background-color: ${({ theme }) => theme.white};
 `;
 
-export const Content = styled.div<{ header: number, nav: boolean }>`
+export const Content = styled.div<{ header: number; nav: number }>`
   position: relative;
   width: 100%;
-  padding: ${({ header }) => (header ? "0 20px" : "60px 20px")};
+  padding: ${({ header }) => (header ? '0 20px' : '60px 20px')};
   padding-top: ${({ header }) => `${header}px`};
-  padding-bottom: ${({ nav }) => (nav ? "100px" : "60px")};
+  padding-bottom: ${({ nav }) => `${nav}px`};
 `;
 
 export const Header = styled.header`
@@ -22,5 +22,15 @@ export const Header = styled.header`
   max-width: 500px;
   position: fixed;
   top: 0;
-  z-index: 100;
+  z-index: 200;
+`;
+
+export const BottomNavigation = styled.div`
+  width: 100%;
+  max-width: 500px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray.tertiary};
+
+  position: fixed;
+  bottom: 0px;
+  z-index: 150;
 `;

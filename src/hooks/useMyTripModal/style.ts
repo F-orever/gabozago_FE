@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ModalWrapper = styled.div<{ isOpen: boolean }>`
   position: fixed;
@@ -6,7 +6,7 @@ export const ModalWrapper = styled.div<{ isOpen: boolean }>`
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: ${({ isOpen }) => (isOpen ? 100 : -10)};
+  z-index: ${({ isOpen }) => (isOpen ? 500 : -10)};
 
   margin: auto;
   max-width: 500px;
@@ -31,8 +31,8 @@ export const TravelSettings = styled.div`
 `;
 
 export const PopupContainer = styled.div`
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 24px;
+  padding-bottom: 24px;
 
   display: flex;
   flex-direction: column;
@@ -71,6 +71,8 @@ export const PopupButton = styled.div`
 `;
 
 export const ChangePopupContainer = styled.form`
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   gap: 14px;

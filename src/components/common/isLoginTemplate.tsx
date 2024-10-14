@@ -1,29 +1,25 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import toast from 'react-hot-toast';
 
-import { loginAlertState } from '../../recoil/loginAlertState';
+import LoginToast from './Toast/Toast/LoginToast';
 
 interface Props {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const IsLoginTemplate= ({children}: Props) => {
-    const navigate = useNavigate();
-    const setIsLoginAlert = useSetRecoilState(loginAlertState);
+function IsLoginTemplate({ children }: Props) {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access_token');
 
-    useEffect(() => {
-        const access_token = localStorage.getItem('access_token');
+    if (!accessToken) {
+      toast.dismiss();
+      toast.custom(() => <LoginToast />, {
+        duration: 1000,
+      });
+    }
+  }, []);
 
-        if (!access_token) {
-            setIsLoginAlert(true);
-            navigate('/');
-        } 
-    }, []);
-
-    return <>
-        {children}
-    </>;
-};
+  return <>{children}</>;
+}
 
 export default IsLoginTemplate;

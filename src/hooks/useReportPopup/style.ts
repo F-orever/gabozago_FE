@@ -1,7 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+
+export const PopupConatiner = styled.div`
+  width: 100%;
+`;
 
 export const ReportForm = styled.form`
-  padding-top: 11px;
+  width: 100%;
+
+  padding-top: 10px;
   border-radius: 15px;
   overflow: hidden;
   position: relative;
@@ -28,7 +34,19 @@ export const ResonItem = styled.li`
 `;
 
 export const RadioInput = styled.input`
-  /* display: none; */
+  width: 24px;
+  height: 24px;
+  border-radius: 100%;
+
+  background-color: white;
+  vertical-align: middle;
+  appearance: none;
+
+  background: center no-repeat url('/Icons/radio_empty.svg');
+  &:checked {
+    background: center no-repeat url('/Icons/radio_checked.svg');
+    border: none;
+  }
 `;
 
 export const RadioLabel = styled.label`

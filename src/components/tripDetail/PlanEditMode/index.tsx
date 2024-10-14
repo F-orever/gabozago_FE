@@ -1,12 +1,11 @@
-import * as S from "./style";
-import { useRecoilState } from "recoil";
-import { useParams } from "react-router-dom";
-import { useEffect } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
-import { patch } from "../../../utils/api";
-import DayPlanEdit from "../DayPlanEdit";
-import { DayPlan } from "../TripPlanList";
-import { editingTripPlanState, tripState } from "../../../recoil/tripState";
+import { useRecoilState } from 'recoil';
+import { useParams } from 'react-router-dom';
+import { DragDropContext } from 'react-beautiful-dnd';
+import * as S from './style';
+import { patch } from '@_utils/api';
+import DayPlanEdit from '../DayPlanEdit';
+import { DayPlan } from '../TripPlanList';
+import { editingTripPlanState, tripState } from '../../../recoil/tripState';
 
 interface Props {
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,7 +17,17 @@ function PlanEditMode({ setIsEditMode }: Props) {
   const [tempData, setTempData] = useRecoilState(editingTripPlanState);
 
   const patchTripPlan = (data: DayPlan[]) => {
-    patch<DayPlan[]>(`my-travel/${id}`, data);
+    const patchData = data.map((dayPlanItem) => {
+      const { day, route } = dayPlanItem;
+      return {
+        day,
+        route: route.map((place) => {
+          return { detailRouteId: place.detailRouteId, placeId: place.placeId };
+        }),
+      };
+    });
+    // @TODO: 다른 날짜의 여행지를 이동할 때, 500 에러 발생
+    patch<DayPlan[]>(`my-travel/${id}`, patchData);
   };
 
   const onCancle = () => {
@@ -38,8 +47,8 @@ function PlanEditMode({ setIsEditMode }: Props) {
   };
 
   const onDragStart = (e) => {
-    document.body.style.userSelect = "none";
-    document.body.style.cursor = "grab";
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'grab';
   };
   const onDragEnd = (e) => {
     const { destination, source, draggableId } = e;
@@ -47,22 +56,18 @@ function PlanEditMode({ setIsEditMode }: Props) {
     if (!destination) {
       return;
     }
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
       return;
     }
 
-    const destinationDay = Number(destination.droppableId.split("-")[1]);
-    const sourceDay = Number(source.droppableId.split("-")[1]);
+    const destinationDay = Number(destination.droppableId.split('-')[1]);
+    const sourceDay = Number(source.droppableId.split('-')[1]);
 
     if (destinationDay === sourceDay) {
       // 같은 source에서 변경했을 때
       setTempData(
         tempData.map((dayPlan) => {
           if (dayPlan.day === sourceDay) {
-            console.log("here");
             const tempRoute = [...dayPlan.route];
             const targetPlace = tempRoute[source.index];
 
@@ -70,16 +75,15 @@ function PlanEditMode({ setIsEditMode }: Props) {
             tempRoute.splice(destination.index, 0, targetPlace);
 
             return { ...dayPlan, route: tempRoute };
-          } else {
-            return dayPlan;
           }
-        })
+          return dayPlan;
+        }),
       );
     } else {
       // 다른 droppable로 이동했을 때
       setTempData(() => {
         const targetPlace = tempData[sourceDay - 1].route.find(
-          (place, index) => index === source.index
+          (place, index) => index === source.index,
         );
 
         return tempData.map((dayPlan) => {
@@ -88,26 +92,21 @@ function PlanEditMode({ setIsEditMode }: Props) {
             tempRoute.splice(source.index, 1);
 
             return { ...dayPlan, route: tempRoute };
-          } else if (dayPlan.day === destinationDay) {
+          }
+          if (dayPlan.day === destinationDay) {
             const tempRoute = [...dayPlan.route];
             if (targetPlace) {
               tempRoute.splice(destination.index, 0, targetPlace);
             }
             return { ...dayPlan, route: tempRoute };
-          } else {
-            return dayPlan;
           }
+          return dayPlan;
         });
       });
     }
-    document.body.style.userSelect = "auto";
-    document.body.style.cursor = "auto";
+    document.body.style.userSelect = 'auto';
+    document.body.style.cursor = 'auto';
   };
-
-  useEffect(() => {
-    console.dir("tempChanged:");
-    console.dir(tempData);
-  }, [tempData]);
 
   return (
     <>
@@ -120,11 +119,7 @@ function PlanEditMode({ setIsEditMode }: Props) {
       <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
         {tempData &&
           tempData.map((dayPlan) => (
-            <DayPlanEdit
-              key={`edit-day-${dayPlan.day}`}
-              day={dayPlan.day}
-              date={dayPlan.date}
-            />
+            <DayPlanEdit key={`edit-day-${dayPlan.day}`} day={dayPlan.day} date={dayPlan.date} />
           ))}
       </DragDropContext>
     </>

@@ -1,6 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div``;
+
+export const SearchWrapper = styled.div`
+  padding: 10px 20px;
+  background-color: white;
+`;
 
 export const LocationContainer = styled.div`
   display: grid;
@@ -13,6 +18,14 @@ export const LocationContainer = styled.div`
 
   border-top: 1px solid ${({ theme }) => theme.gray04};
   border-bottom: 1px solid ${({ theme }) => theme.gray04};
+`;
+
+export const SearchedContainer = styled.div`
+  margin-top: -28px;
+  padding: 15px 20px;
+
+  max-height: 300px;
+  overflow-y: auto;
 `;
 
 export const CategoryList = styled.ul`
@@ -32,8 +45,7 @@ export const CategoryItem = styled.li<{ active: boolean }>`
   font-weight: 600;
   line-height: 24px;
   letter-spacing: 0.15px;
-  background-color: ${({ active, theme }) =>
-    active ? theme.white : theme.gray06};
+  background-color: ${({ active, theme }) => (active ? theme.white : theme.gray06)};
 
   &:hover {
     background-color: ${({ theme }) => theme.white};
@@ -58,8 +70,7 @@ export const RegionItem = styled.li<{ active: boolean }>`
 
   color: ${({ active, theme }) => (active ? theme.main : theme.black)};
 
-  background-color: ${({ active, theme }) =>
-    active ? theme.blue05 : theme.white};
+  background-color: ${({ active, theme }) => (active ? theme.blue05 : theme.white)};
 
   &:hover {
     background-color: ${({ theme }) => theme.blue05};

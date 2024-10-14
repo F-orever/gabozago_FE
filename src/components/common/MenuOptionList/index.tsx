@@ -1,6 +1,6 @@
-import Typography from "../Typography";
-import * as S from "./style";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler } from 'react';
+import Typography from '../Typography';
+import * as S from './style';
 
 interface Props {
   menus: Menu[];
@@ -17,9 +17,9 @@ function MenuOptionList({ menus }: Props) {
   return (
     <S.MenuList>
       {menus.map(({ icon, iconColor, name, onClick }) => (
-        <S.MenuItem color={iconColor} onClick={onClick}>
+        <S.MenuItem color={iconColor} onClick={onClick} key={name}>
           {icon}
-          <Typography.Body size="lg">{name}</Typography.Body>
+          <Typography.Title size="lg">{name}</Typography.Title>
         </S.MenuItem>
       ))}
     </S.MenuList>

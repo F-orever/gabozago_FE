@@ -1,22 +1,24 @@
-import * as S from "./style";
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import * as S from './style';
 
-import { selectedPlacesState } from "../../../recoil/mytrip/selectedPlacesState";
+import { selectedPlacesState } from '../../../recoil/mytrip/selectedPlacesState';
 
-import Typography from "../../common/Typography";
-import LocationPlaceholderIcon from "../../mytrip/LocationPlaceholderIcon";
+import Typography from '../../common/Typography';
+import LocationPlaceholderIcon from '../../mytrip/LocationPlaceholderIcon';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   id: number;
   name: string;
   theme: string;
-  thumbnail?: string;
+  thumbnail?: string | null;
   keyword?: string;
+  address: string;
   location: string;
   locations: string[];
   popupOpen: () => void;
-  setNewLocation: React.Dispatch<React.SetStateAction<string>>
+  setNewLocation: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function RecommendationListItem({
@@ -25,26 +27,23 @@ function RecommendationListItem({
   theme,
   id,
   keyword,
+  address,
   location,
   popupOpen,
   setNewLocation,
-  locations
+  locations,
 }: Props) {
   const [selectedPlaces, setSelectedPlaces] = useRecoilState(selectedPlacesState);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setIsActive(
-      selectedPlaces.find((selectedPlace) => selectedPlace.id === id) !==
-        undefined
-    );
+    setIsActive(selectedPlaces.find((selectedPlace) => selectedPlace.id === id) !== undefined);
   }, [selectedPlaces]);
 
   function onBtnClick() {
     if (isActive) {
-      setSelectedPlaces((prev) =>
-        prev.filter((SelectedPlace) => SelectedPlace.id !== id)
-      );
+      setSelectedPlaces((prev) => prev.filter((SelectedPlace) => SelectedPlace.id !== id));
     } else {
       setSelectedPlaces((prev) => [
         ...prev,
@@ -52,52 +51,67 @@ function RecommendationListItem({
           name,
           thumbnail,
           id,
-          location: location
-        }
+          location,
+        },
       ]);
 
-      if(!locations.includes(location)){
+      if (!locations.includes(location)) {
         setNewLocation(location);
-        popupOpen();
+        // popupOpen();
       }
     }
   }
 
   return (
     <S.Container>
-      <S.LeftItems>
+      <S.LeftItems
+        onClick={() => {
+          navigate(`/place/${id}?keyword=${keyword}&isMyTrip=true`);
+        }}
+      >
         <S.Thumbnail>
-          {
-            thumbnail ? 
-            <img src={thumbnail} />
-            :
-            <LocationPlaceholderIcon type={(id % 5 + 1) as 1|2|3|4|5}/>
-          }
+          {thumbnail ? (
+            <img src={thumbnail} alt={thumbnail} />
+          ) : (
+            <LocationPlaceholderIcon type={((id % 5) + 1) as 1 | 2 | 3 | 4 | 5} />
+          )}
         </S.Thumbnail>
         <S.Infomation>
           {keyword ? (
             <Typography.Title size="lg">
-              {name.split("").map((word, index) => {
+              {name.split('').map((word, index) => {
                 if (
                   name.indexOf(keyword) <= index &&
                   index < name.indexOf(keyword) + keyword.length
                 ) {
-                  return <S.HighlightName>{word}</S.HighlightName>;
-                } else {
-                  return <>{word}</>;
+                  return <S.HighlightName key={word}>{word}</S.HighlightName>;
                 }
+                return <>{word}</>;
               })}
             </Typography.Title>
           ) : (
             <Typography.Title size="lg">{name}</Typography.Title>
           )}
-          <Typography.Label size="lg" color="#A6A6A6">
-            <span>{theme}</span>
-          </Typography.Label>
+
+          <S.ExtraInfomation>
+            <Typography.Label size="lg" color="#A6A6A6">
+              <span>{theme}</span>
+            </Typography.Label>
+            {theme && address && (
+              <Typography.Label size="lg" color="#A6A6A6">
+                <span>|</span>
+              </Typography.Label>
+            )}
+            <Typography.Label size="lg" color="#A6A6A6">
+              <span>{address}</span>
+            </Typography.Label>
+          </S.ExtraInfomation>
         </S.Infomation>
       </S.LeftItems>
       <S.Button isActive={isActive} onClick={onBtnClick}>
-        <Typography.Label size="lg" color="inherit">선택</Typography.Label>
+        <Typography.Label size="lg" color="inherit">
+          선택
+        </Typography.Label>
       </S.Button>
     </S.Container>
   );
